@@ -3,6 +3,7 @@ package fossilsarcheology.server.block.entity;
 import fossilsarcheology.server.block.AnalyzerBlock;
 import fossilsarcheology.server.item.FAItemRegistry;
 import fossilsarcheology.server.recipe.FAMachineRecipeRegistry;
+import fossilsarcheology.server.recipe.RecipeAnalyzer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -198,7 +199,11 @@ public class TileEntityAnalyzer extends TileEntity implements IInventory, ISided
 			ItemStack output = ItemStack.EMPTY;
 			Random random = this.world.rand;
 			ItemStack input = this.stacks.get(rawIndex);
-			output = FAMachineRecipeRegistry.getAnalyzerRecipeForItem(input).generateOutput(random);
+
+			RecipeAnalyzer recipeAnalyzer = FAMachineRecipeRegistry.getAnalyzerRecipeForItem(input);
+			if(recipeAnalyzer!=null){
+				output = recipeAnalyzer.generateOutput(random);
+			}
 			if(output.getCount() > 1){
 				int maxCount = output.getCount() - 1;
 				output.setCount(1 + random.nextInt(maxCount));
@@ -218,6 +223,8 @@ public class TileEntityAnalyzer extends TileEntity implements IInventory, ISided
 						break;
 					}
 				}
+			} else {
+				System.out.println("傻逼？");
 			}
 		}
 	}

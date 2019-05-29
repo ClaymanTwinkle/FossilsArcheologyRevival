@@ -39,15 +39,9 @@ public class FossilBlock extends Block implements DefaultRenderedItem {
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		int i = rand.nextInt(1100);
-		if (i < 1) {
+		if (i < 11) {
 			this.randomMeta = 0;
 			return FAItemRegistry.SCARAB_GEM;
-		} else if (i < 6) {
-			this.randomMeta = 0;
-			return FAItemRegistry.BROKEN_SWORD;
-		} else if (i < 11) {
-			this.randomMeta = 0;
-			return FAItemRegistry.BROKEN_HELMET;
 		} else if (i < 13) {
 			int dropRandom = rand.nextInt(DinosaurBoneType.values().length);
 			if (dropRandom != 4) {

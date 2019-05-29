@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 public class EntityDinosaurEgg extends EntityLiving implements IEntityAdditionalSpawnData {
     private static final DataParameter<Integer> HATCHING_INDEX = EntityDataManager.createKey(EntityDinosaurEgg.class, DataSerializers.VARINT);
 
-    public static int lastBirthTick;
+    public int lastBirthTick;
     public final int totalHatchTime;
     public PrehistoricEntityType selfType;
     public String parentOwner;
@@ -95,7 +95,7 @@ public class EntityDinosaurEgg extends EntityLiving implements IEntityAdditional
     }
 
     public String getTexture() {
-        return "fossil:textures/model/egg/" + selfType.friendlyName + "_Egg.png";
+        return "fossil:textures/model/egg/" + selfType.friendlyName + "_egg.png";
     }
 
     private void setPedia() {

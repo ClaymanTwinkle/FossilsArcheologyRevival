@@ -256,7 +256,7 @@ public class FAMachineRecipeRegistry {
     public static ItemStack getCultivateResult(ItemStack stack) {
         for (Map.Entry<ItemStack, ItemStack> entry : cultivateRecipes.entrySet()) {
             if (OreDictionary.itemMatches(stack, entry.getKey(), false)) {
-                return entry.getValue();
+                return entry.getValue().copy();
             }
         }
         return ItemStack.EMPTY;
