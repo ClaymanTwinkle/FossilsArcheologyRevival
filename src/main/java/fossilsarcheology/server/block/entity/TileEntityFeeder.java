@@ -23,6 +23,12 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileEntityFeeder extends TileEntity implements IInventory, ISidedInventory, ITickable {
     private static final int[] SLOTS_TOP = new int[] { 0, 1 };
@@ -307,8 +313,16 @@ public class TileEntityFeeder extends TileEntity implements IInventory, ISidedIn
     @Override
     @javax.annotation.Nullable
     public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @javax.annotation.Nullable net.minecraft.util.EnumFacing facing) {
-        if (facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return (T) handlerTop;
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
     }
 }
