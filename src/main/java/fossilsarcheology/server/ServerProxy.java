@@ -15,6 +15,8 @@ import fossilsarcheology.server.entity.prehistoric.EntityPrehistoric;
 import fossilsarcheology.server.entity.prehistoric.MobType;
 import fossilsarcheology.server.entity.prehistoric.PrehistoricEntityType;
 import fossilsarcheology.server.entity.projectile.EntityBirdEgg;
+import fossilsarcheology.server.entity.utility.FossilsMammalProperties;
+import fossilsarcheology.server.entity.utility.FossilsPlayerProperties;
 import fossilsarcheology.server.event.FossilBonemealEvent;
 import fossilsarcheology.server.event.FossilCraftingEvent;
 import fossilsarcheology.server.event.FossilLivingEvent;
@@ -24,6 +26,7 @@ import fossilsarcheology.server.recipe.FAOreDictRegistry;
 import fossilsarcheology.server.util.FossilFoodMappings;
 import fossilsarcheology.server.world.FAWorldGenerator;
 import fossilsarcheology.server.world.FAWorldRegistry;
+import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
@@ -42,6 +45,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -172,7 +176,7 @@ public class ServerProxy implements IGuiHandler {
     public static void registerBiome(RegistryEvent.Register<Biome> event) {
         event.getRegistry().register(FAWorldRegistry.ANU_BIOME.setRegistryName("Lair of Darkness"));
         event.getRegistry().register(FAWorldRegistry.TREASURE_BIOME.setRegistryName("Treasure"));
-        BiomeDictionary.addTypes(FAWorldRegistry.ANU_BIOME, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.VOID, BiomeDictionary.Type.SPOOKY);
+        BiomeDictionary.addTypes(FAWorldRegistry.ANU_BIOME, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.VOID);
         BiomeDictionary.addTypes(FAWorldRegistry.TREASURE_BIOME, BiomeDictionary.Type.VOID);
 
     }
@@ -189,9 +193,7 @@ public class ServerProxy implements IGuiHandler {
         MinecraftForge.EVENT_BUS.register(new FossilCraftingEvent());
         MinecraftForge.EVENT_BUS.register(new FossilPickupItemEvent());
         MinecraftForge.EVENT_BUS.register(new FossilBonemealEvent());
-        MinecraftForge.EVENT_BUS.register(new FossilLivingEvent());
         GameRegistry.registerWorldGenerator(new FAWorldGenerator(), 0);
-
     }
 
     public void calculateChainBuffer(EntityFishBase entity) {
@@ -280,5 +282,8 @@ public class ServerProxy implements IGuiHandler {
 
     public Object getArmorModel(int id) {
         return null;
+    }
+
+    public void openPedia() {
     }
 }

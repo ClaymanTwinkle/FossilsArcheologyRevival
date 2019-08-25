@@ -1,5 +1,6 @@
 package fossilsarcheology.server.entity.ai;
 
+import fossilsarcheology.Revival;
 import fossilsarcheology.server.block.entity.TileEntityFeeder;
 import fossilsarcheology.server.entity.prehistoric.EntityPrehistoric;
 import net.minecraft.entity.Entity;
@@ -34,7 +35,9 @@ public class DinoAIEatFeeders extends EntityAIBase {
         if (this.entity.isMovementBlocked()) {
             return false;
         }
-        resetTarget();
+        if(entity.ticksExisted % Revival.CONFIG_OPTIONS.dinosaurUpdateTick == 0){
+            resetTarget();//expensive operation
+        }
         if(targetBlock != null){
             this.entity.shouldWander = false;
         }
@@ -82,7 +85,7 @@ public class DinoAIEatFeeders extends EntityAIBase {
             if (entity instanceof TileEntityFeeder) {
                 TileEntityFeeder feeder = (TileEntityFeeder) entity;
                 double distance = this.entity.getDistance(this.targetBlock.getX(), this.targetBlock.getY(), this.targetBlock.getZ());
-                if (distance < Math.max(this.entity.getEntityBoundingBox().getAverageEdgeLength() * 2, 1.5F)) {
+                if (distance < Math.max(this.entity.getEntityBoundingBox().getAverageEdgeLength() * 2.5, 2.5F)) {
                     if (this.feedingTicks < 30 && !feeder.isEmpty(this.entity.type)) {
                         this.feedingTicks++;
                         feeder.feedDinosaur(this.entity);

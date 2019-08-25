@@ -1,5 +1,6 @@
 package fossilsarcheology.client.gui.dinopedia;
 
+import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import fossilsarcheology.Revival;
 import fossilsarcheology.server.entity.EntityDinosaurEgg;
@@ -16,10 +17,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
@@ -30,6 +30,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.client.ItemModelMesherForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
@@ -62,7 +64,7 @@ public class GuiPedia extends GuiScreen {
     private float mouseX;
     private float mouseY;
     private final FoodSorter sorter;
-
+    private String renderText = "";
     public GuiPedia() {
         super();
         left = 0;
@@ -72,6 +74,7 @@ public class GuiPedia extends GuiScreen {
         ySize = 245;
         sorter = new FoodSorter();
     }
+
 
     public static void renderDinosaur(int posX, int posY, int scaleValue, float renderPitch, EntityLivingBase mob) {
         GlStateManager.enableColorMaterial();
@@ -158,6 +161,7 @@ public class GuiPedia extends GuiScreen {
         if (!this.mc.player.isEntityAlive() || this.mc.player.isDead) {
             this.mc.player.closeScreen();
         }
+        renderText = "";
     }
 
     public void reset() {
@@ -201,14 +205,15 @@ public class GuiPedia extends GuiScreen {
             if (!item.isEmpty()) {
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 net.minecraft.client.gui.FontRenderer font = null;
+                ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+                if(mesher instanceof ItemModelMesherForge && ((ItemModelMesherForge) mesher).getLocation(item) == ModelBakery.MODEL_MISSING){
+                    return false;
+                }
                 this.itemRender.renderItemAndEffectIntoGUI(item, x, y);
                 this.itemRender.renderItemOverlayIntoGUI(font, item, x, y, null);
                 if (mouseX > x && mouseX < x + drawSize) {
                     if (mouseY > y && mouseY < y + drawSize) {
-                        List<String> text = new ArrayList<>();
-                        String s1 = item.getDisplayName();
-                        text.add(s1);
-                        this.drawHoveringText(text, (-this.fontRenderer.getStringWidth(s1) / 2) + 280, 222, fontRenderer);
+                        renderText = item.getDisplayName();
                     }
                 }
                 return true;
@@ -237,7 +242,9 @@ public class GuiPedia extends GuiScreen {
 
     @Override
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
-        this.drawDefaultBackground();
+        if(mc.world != null) {
+            this.drawDefaultBackground();
+        }
         int k = this.guiLeft;
         int l = this.guiTop;
         this.drawGuiContainerBackgroundLayer(p_73863_3_, p_73863_1_, p_73863_2_);
@@ -260,25 +267,32 @@ public class GuiPedia extends GuiScreen {
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         RenderHelper.enableStandardItemLighting();
+        if(!renderText.isEmpty()){
+            this.drawHoveringText(Lists.newArrayList(renderText), p_73863_1_, p_73863_2_, fontRenderer);
+        }
     }
 
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        boolean flag = false;
         if (Revival.PEDIA_OBJECT instanceof EntityPrehistoric || Revival.PEDIA_OBJECT instanceof EntityFishBase || Revival.PEDIA_OBJECT instanceof EntityQuagga) {
             this.buttonNextPage.enabled = true;
         }
         if (bookPages == 0) {
             if (Revival.PEDIA_OBJECT instanceof EntityAnimal) {
                 FossilsMammalProperties properties = EntityPropertiesHandler.INSTANCE.getProperties((EntityAnimal) Revival.PEDIA_OBJECT, FossilsMammalProperties.class);
-                if (PrehistoricEntityType.isMammal((Entity) Revival.PEDIA_OBJECT) && properties != null && properties.embryoProgress < 9999 && properties.embryo != null && properties.isPregnant) {
-                    EntityAnimal entity = (EntityAnimal) Revival.PEDIA_OBJECT;
-                    String s1 = I18n.format(entity.getName());
-                    String s2 = "prehistoric.pregnant";
-                    int quot = (int) Math.floor(((float) properties.embryoProgress / (float) (properties.embryo.growTime + 1) * 100.0F));
-                    String s3 = I18n.format("prehistoric.pregnantTime") + " " + String.valueOf(quot) + "%";
-                    printStringXY(s3, (-this.fontRenderer.getStringWidth(s3) / 2) + 100, 110, 157, 126, 103);
-                    GlStateManager.scale(1.5F, 1.5F, 1.5F);
-                    printStringXY(I18n.format(s2) + " " + entity.getName(), (-this.fontRenderer.getStringWidth(I18n.format(s2) + entity.getName()) / 2) + 65, 60, 66, 48, 36);
-                    return;
+                if (properties != null) {
+                    if(properties.isPregnant()){
+                        flag = true;
+                        EntityAnimal entity = (EntityAnimal) Revival.PEDIA_OBJECT;
+                        String s1 = I18n.format(entity.getName());
+                        String s2 = "prehistoric.pregnant";
+                        int quot = (int) Math.floor(((float) properties.embryoProgress / (float) (Revival.CONFIG_OPTIONS.pregnancyTime + 1) * 100.0F));
+                        String s3 = I18n.format("prehistoric.pregnantTime") + " " + String.valueOf(quot) + "%";
+                        printStringXY(s3, (-this.fontRenderer.getStringWidth(s3) / 2) + 100, 110, 157, 126, 103);
+                        GlStateManager.scale(1.5F, 1.5F, 1.5F);
+                        printStringXY(I18n.format(s2) + " " + entity.getName(), (-this.fontRenderer.getStringWidth(I18n.format(s2) + entity.getName()) / 2) + 65, 60, 66, 48, 36);
+                        return;
+                    }
                 }
             }
             if (Revival.PEDIA_OBJECT instanceof EntityLivingBase) {
@@ -318,6 +332,7 @@ public class GuiPedia extends GuiScreen {
                 showPrehistoricBio("quagga");
             }
         }
+
     }
 
     public void showPrehistoricBio(String mobName) {
@@ -563,7 +578,7 @@ public class GuiPedia extends GuiScreen {
                 if (mouseX > x && mouseX < x + 154) {
                     if (mouseY > y && mouseY < y + 13) {
                         List<String> text = new ArrayList<>();
-                        text.add(I18n.format("pedia.moodstatus") + dino.getMoodFace().color + dino.getMood());
+                        text.add(I18n.format("pedia.moodstatus") + " " + dino.getMoodFace().color + dino.getMood());
                         GlStateManager.pushMatrix();
                         this.drawHoveringText(text, mouseX, mouseY, fontRenderer);
                         GlStateManager.popMatrix();

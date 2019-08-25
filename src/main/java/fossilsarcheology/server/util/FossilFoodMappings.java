@@ -146,6 +146,7 @@ public class FossilFoodMappings {
 		FoodMappings.INSTANCE.addMeat(EntityDryosaurus.class, 25);
 		FoodMappings.INSTANCE.addMeat(EntityTherizinosaurus.class, 125);
 		FoodMappings.INSTANCE.addMeat(EntityParasaurolophus.class, 150);
+		FoodMappings.INSTANCE.addMeat(EntityPlatybelodon.class, 90);
 		FoodMappings.INSTANCE.addFish(EntityCoelacanth.class, 20);
 		FoodMappings.INSTANCE.addFish(EntitySturgeon.class, 20);
 		FoodMappings.INSTANCE.addFish(EntityAlligatorGar.class, 20);
@@ -158,6 +159,29 @@ public class FossilFoodMappings {
 		FoodMappings.INSTANCE.addFish(EntityAlligatorGar.class, 50);
 		FoodMappings.INSTANCE.addFish(EntitySturgeon.class, 50);
 		FoodMappings.INSTANCE.addFish(EntitySquid.class, 40);
+		FoodMappings.INSTANCE.addFish(EntityTiktaalik.class, 40);
+		FoodMappings.INSTANCE.addFish(EntityCrassigyrinus.class, 35);
+		FoodMappings.INSTANCE.addFish(EntityDiplocaulus.class, 20);
+		FoodMappings.INSTANCE.addMeatEntity("rats:rat", 5);
+		FoodMappings.INSTANCE.addMeatEntity("historicizedmedicine:rat", 5);
+		FoodMappings.INSTANCE.addMeatEntity("bewitchment:lizard", 3);
+		FoodMappings.INSTANCE.addMeatEntity("bewitchment:toad", 3);
+		FoodMappings.INSTANCE.addMeatEntity("bewitchment:newt", 3);
+		FoodMappings.INSTANCE.addMeatEntity("bewitchment:snake", 4);
+		FoodMappings.INSTANCE.addMeatEntity("bewitchment:raven", 5);
+		FoodMappings.INSTANCE.addMeatEntity("bewitchment:owl", 7);
+		FoodMappings.INSTANCE.addMeatEntity("familiarfauna:familiarfauna.deer", 35);
+		FoodMappings.INSTANCE.addMeatEntity("familiarfauna:familiarfauna.turkey", 10);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:deer", 35);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:goat", 25);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:pheasant", 10);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:boar", 30);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:reindeer", 35);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:squirrel", 3);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:songbird", 3);
+		FoodMappings.INSTANCE.addMeatEntity("betteranimalsplus:lammergeier", 8);
+		FoodMappings.INSTANCE.addMeatEntity("totemic:buffalo", 55);
+		FoodMappings.INSTANCE.addMeatEntity("totemic:bald_eagle", 8);
 		FoodMappings.INSTANCE.removeItemMapping(new ItemStack(PrehistoricEntityType.HORSE.embryoItem), Diet.CARNIVORE_EGG);
 		FoodMappings.INSTANCE.addFish("listAllfishraw", 5);
 		FoodMappings.INSTANCE.addFish("foodOctopuscooked", 30);
@@ -361,6 +385,8 @@ public class FossilFoodMappings {
 		FoodMappings.INSTANCE.addMeat("foodTurtlecooked", 40);
 		FoodMappings.INSTANCE.addMeat("foodFrograw", 15);
 		FoodMappings.INSTANCE.addMeat("foodFrogcooked", 25);
+		FoodMappings.INSTANCE.addMeat("foodRatraw", 15);
+		FoodMappings.INSTANCE.addMeat("foodRatcooked", 25);
 		FoodMappings.INSTANCE.addEgg("listAllegg", 7);
 		FoodMappings.INSTANCE.addEgg("egg", 7);
 	}

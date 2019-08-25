@@ -24,11 +24,11 @@ public class AnuTeleporter extends Teleporter {
 	@Override
 	public boolean placeInExistingPortal(Entity entity, float rotationYaw) {
 		this.placeInPortal(entity);
-		return false;
+		return true;
 	}
 
 	public void placeInPortal(Entity entity) {
-		if (worldServerInstance.provider.getDimension() == Revival.CONFIG.dimensionIDDarknessLair) {
+		if (worldServerInstance.provider.getDimension() == Revival.CONFIG_OPTIONS.dimensionIDDarknessLair) {
 			entity.setLocationAndAngles((double) -74, (double) 63, (double) -115, entity.rotationYaw, 0.0F);
 			int i = MathHelper.floor(entity.posX);
 			int j = MathHelper.floor(entity.posY) - 2;
@@ -46,7 +46,7 @@ public class AnuTeleporter extends Teleporter {
 					}
 				}
 			}
-		}else if(worldServerInstance.provider.getDimension() == 0){
+		}else if(worldServerInstance.provider.getDimension() == Revival.CONFIG_OPTIONS.homePortalExitDimension){
 			if(entity instanceof EntityPlayer && ((EntityPlayer) entity).getBedLocation() != null){
 				BlockPos bedPos = ((EntityPlayer) entity).getBedLocation();
 				entity.setLocationAndAngles(bedPos.getX() + 0.5D, bedPos.getY() + 1.5D, bedPos.getZ() + 0.5D, 0.0F, 0.0F);

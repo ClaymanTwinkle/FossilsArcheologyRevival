@@ -34,6 +34,7 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -89,7 +90,6 @@ public class ClientProxy extends ServerProxy {
                 }
             }
         }
-
         Item tar = Item.getItemFromBlock(FABlockRegistry.TAR);
         ModelBakery.registerItemVariants(tar);
         ModelLoader.setCustomMeshDefinition(tar, stack -> BLOCK_TAR_MODEL);
@@ -216,7 +216,7 @@ public class ClientProxy extends ServerProxy {
     @Override
     @SideOnly(Side.CLIENT)
     public void playSound(SoundEvent sound) {
-        Minecraft.getMinecraft().getSoundHandler().playSound(net.minecraft.client.audio.PositionedSoundRecord.getMusicRecord(sound));
+        Minecraft.getMinecraft().getSoundHandler().playSound(net.minecraft.client.audio.PositionedSoundRecord.getRecord(sound, 1, 1));
     }
 
     @Override
@@ -226,5 +226,11 @@ public class ClientProxy extends ServerProxy {
         if (Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(isound)) {
             Minecraft.getMinecraft().getSoundHandler().stopSound(isound);
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void openPedia() {
+        Minecraft.getMinecraft().displayGuiScreen(new GuiPedia());
     }
 }

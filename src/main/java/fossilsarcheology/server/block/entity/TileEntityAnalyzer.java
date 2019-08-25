@@ -199,11 +199,7 @@ public class TileEntityAnalyzer extends TileEntity implements IInventory, ISided
 			ItemStack output = ItemStack.EMPTY;
 			Random random = this.world.rand;
 			ItemStack input = this.stacks.get(rawIndex);
-
-			RecipeAnalyzer recipeAnalyzer = FAMachineRecipeRegistry.getAnalyzerRecipeForItem(input);
-			if(recipeAnalyzer!=null){
-				output = recipeAnalyzer.generateOutput(random);
-			}
+			output = FAMachineRecipeRegistry.getAnalyzerRecipeForItem(input).generateOutput(new Random());
 			if(output.getCount() > 1){
 				int maxCount = output.getCount() - 1;
 				output.setCount(1 + random.nextInt(maxCount));
@@ -211,21 +207,20 @@ public class TileEntityAnalyzer extends TileEntity implements IInventory, ISided
 			if (!output.isEmpty()) {
 				for (int slot = 9; slot < 13; slot++) {
 					ItemStack stack = this.stacks.get(slot);
-					if (!stack.isEmpty()) {
+					if (stack.isEmpty()) {
+						this.stacks.set(slot, output);
+						break;
+					} else {
 						if (stack.isItemEqual(output) && stack.getCount() + output.getCount() < 64) {
 							stack.setCount(stack.getCount() + output.getCount());
-							this.stacks.get(this.rawIndex).shrink(1);
 							break;
 						}
-					} else {
-						this.stacks.set(slot, output);
-						this.stacks.get(this.rawIndex).shrink(1);
-						break;
 					}
 				}
 			} else {
 				System.out.println("傻逼？");
 			}
+			input.shrink(1);
 		}
 	}
 
